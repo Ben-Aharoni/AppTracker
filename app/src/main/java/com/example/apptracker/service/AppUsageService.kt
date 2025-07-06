@@ -3,14 +3,15 @@ package com.example.apptracker.service
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.app.usage.UsageStatsManager
 import android.os.Build
 import android.os.IBinder
-import android.app.usage.UsageStatsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.apptracker.data.AppUsageEntry
 import com.example.apptracker.util.AppUsageStorage
 import kotlinx.coroutines.*
+import android.content.pm.PackageManager
 
 class AppUsageService : Service() {
 
@@ -46,6 +47,8 @@ class AppUsageService : Service() {
 
     private fun startTracking() {
         job.launch {
+            val myPackageName = packageName
+
             while (true) {
                 val currentTime = System.currentTimeMillis()
                 val usageStats = usageStatsManager.queryUsageStats(
@@ -53,13 +56,22 @@ class AppUsageService : Service() {
                     currentTime - 10000,
                     currentTime
                 )
+
                 val currentApp = usageStats
                     .maxByOrNull { it.lastTimeUsed }
                     ?.packageName
 
-                if (currentApp != null && currentApp != lastPackage) {
+                val isLauncher = currentApp?.let { isLauncherApp(it) } ?: false
+
+                if (
+                    currentApp != null &&
+                    currentApp != lastPackage &&
+                    currentApp != myPackageName &&
+                    !isLauncher
+                ) {
                     val endTime = System.currentTimeMillis()
-                    if (lastPackage != null) {
+
+                    if (lastPackage != null && lastPackage != myPackageName && !isLauncherApp(lastPackage!!)) {
                         val entry = AppUsageEntry(
                             packageName = lastPackage!!,
                             appName = lastPackage!!,
@@ -77,6 +89,18 @@ class AppUsageService : Service() {
                 delay(5000)
             }
         }
+    }
+
+    /**
+     * מחזירה true אם האפליקציה היא ה־Launcher הראשי של המכשיר
+     */
+    private fun isLauncherApp(packageName: String): Boolean {
+        val pm = packageManager
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+        }
+        val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return resolveInfo?.activityInfo?.packageName == packageName
     }
 
     override fun onDestroy() {

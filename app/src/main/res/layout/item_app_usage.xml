@@ -4,6 +4,8 @@
     android:layout_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layoutDirection="ltr"
     android:elevation="4dp">
 
     <LinearLayout

@@ -3,10 +3,11 @@ package com.example.apptracker.ui
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
+import android.os.*
 import android.provider.Settings
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.apptracker.databinding.ActivityMainBinding
 import com.example.apptracker.service.AppUsageService
@@ -17,6 +18,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val adapter = AppUsageAdapter()
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val refreshRunnable = object : Runnable {
+        override fun run() {
+            val updated = AppUsageStorage.loadEntries(this@MainActivity)
+            adapter.submitList(updated)
+            handler.postDelayed(this, 2000)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -25,30 +35,39 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
+        val serviceIntent = Intent(this, AppUsageService::class.java)
+
         binding.btnStartService.setOnClickListener {
             if (!hasUsageAccessPermission()) {
                 startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
             } else {
-                val intent = Intent(this, AppUsageService::class.java)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(intent)
-                } else {
-                    startService(intent)
-                }
+                ContextCompat.startForegroundService(this, serviceIntent)
+                Toast.makeText(this, "📡 Tracking Started", Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.btnStopService.setOnClickListener {
-            val intent = Intent(this, AppUsageService::class.java)
-            stopService(intent)
+            stopService(serviceIntent)
+            Toast.makeText(this, "🛑 Tracking Stopped", Toast.LENGTH_SHORT).show()
         }
 
-        loadUsageData()
+        binding.btnClearData.setOnClickListener {
+            AppUsageStorage.clearEntries(this)
+            adapter.submitList(emptyList())
+            Toast.makeText(this, "🧹 Data Deleted", Toast.LENGTH_SHORT).show()
+        }
+
+        adapter.submitList(AppUsageStorage.loadEntries(this))
     }
 
-    private fun loadUsageData() {
-        val data = AppUsageStorage.loadEntries(this)
-        adapter.submitList(data)
+    override fun onResume() {
+        super.onResume()
+        handler.post(refreshRunnable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(refreshRunnable)
     }
 
     private fun hasUsageAccessPermission(): Boolean {

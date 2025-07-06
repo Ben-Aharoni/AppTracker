@@ -25,4 +25,12 @@ object AppUsageStorage {
         val type = object : TypeToken<List<AppUsageEntry>>() {}.type
         return Gson().fromJson(json, type) ?: emptyList()
     }
+
+    fun clearEntries(context: Context) {
+        val file = File(context.filesDir, FILE_NAME)
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
 }

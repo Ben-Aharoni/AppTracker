@@ -6,18 +6,25 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStartService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="▶️ Start Tracking" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStopService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="⏹ Stop Tracking" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnClearData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="🗑 Clean All" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
