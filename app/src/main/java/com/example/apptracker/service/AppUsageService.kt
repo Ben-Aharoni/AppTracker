@@ -16,8 +16,7 @@ import android.content.pm.PackageManager
 class AppUsageService : Service() {
 
     private lateinit var usageStatsManager: UsageStatsManager
-    private var lastPackage: String? = null
-    private var startTime: Long = 0L
+    private var activeEntry: AppUsageEntry? = null
     private val job = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreate() {
@@ -62,38 +61,41 @@ class AppUsageService : Service() {
                     ?.packageName
 
                 val isLauncher = currentApp?.let { isLauncherApp(it) } ?: false
+                val shouldTrack = currentApp != null &&
+                        currentApp != myPackageName &&
+                        !isLauncher
 
-                if (
-                    currentApp != null &&
-                    currentApp != lastPackage &&
-                    currentApp != myPackageName &&
-                    !isLauncher
-                ) {
-                    val endTime = System.currentTimeMillis()
-
-                    if (lastPackage != null && lastPackage != myPackageName && !isLauncherApp(lastPackage!!)) {
-                        val entry = AppUsageEntry(
-                            packageName = lastPackage!!,
-                            appName = lastPackage!!,
-                            startTime = startTime,
-                            endTime = endTime
+                if (shouldTrack) {
+                    if (activeEntry == null) {
+                        // Starting a new usage session
+                        activeEntry = AppUsageEntry(
+                            packageName = currentApp!!,
+                            appName = currentApp,
+                            startTime = currentTime,
+                            endTime = currentTime
                         )
-                        AppUsageStorage.saveEntry(this@AppUsageService, entry)
-                        Log.d("AppUsageService", "Saved: $entry")
-                    }
+                    } else if (currentApp == activeEntry!!.packageName) {
+                        // Still using the same app → update endTime
+                        activeEntry!!.endTime = currentTime
+                    } else {
+                        // Switched to a new app → save current session, start new
+                        AppUsageStorage.saveEntry(this@AppUsageService, activeEntry!!)
+                        Log.d("AppUsageService", "Saved: $activeEntry")
 
-                    lastPackage = currentApp
-                    startTime = endTime
+                        activeEntry = AppUsageEntry(
+                            packageName = currentApp!!,
+                            appName = currentApp,
+                            startTime = currentTime,
+                            endTime = currentTime
+                        )
+                    }
                 }
 
-                delay(5000)
+                delay(2000) // Sample every 2 seconds
             }
         }
     }
 
-    /**
-     * מחזירה true אם האפליקציה היא ה־Launcher הראשי של המכשיר
-     */
     private fun isLauncherApp(packageName: String): Boolean {
         val pm = packageManager
         val intent = Intent(Intent.ACTION_MAIN).apply {
@@ -104,6 +106,11 @@ class AppUsageService : Service() {
     }
 
     override fun onDestroy() {
+        // Save active usage if available
+        activeEntry?.let {
+            AppUsageStorage.saveEntry(this, it)
+            Log.d("AppUsageService", "Saved onDestroy: $it")
+        }
         job.cancel()
         super.onDestroy()
     }
