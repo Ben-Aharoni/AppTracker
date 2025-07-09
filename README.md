@@ -8,6 +8,7 @@
 - [Getting Started](#getting-started)
   - [Requirements](#requirements)
   - [How To Install](#how-to-install)
+  - [In App Usage](#in-app-usage)
 - [App Video](#app-video)
 
 ## App Overview
