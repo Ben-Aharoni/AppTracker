@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layoutDirection="ltr">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStartService"
@@ -16,21 +17,48 @@
         android:id="@+id/btnStopService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/stop_tracking" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/clean_all" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtGraphTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📊 App Usage Graph"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#3F51B5"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:layoutDirection="ltr"/>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp">
+
+        <com.example.apptracker.ui.SimpleBarChartView
+            android:id="@+id/barChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp" />
+    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/list_of_app_usage_sessions" />
 
 </LinearLayout>

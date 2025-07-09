@@ -1,8 +1,6 @@
 package com.example.apptracker.service
 
 import android.app.*
-import android.app.usage.NetworkStats
-import android.app.usage.NetworkStatsManager
 import android.content.Context
 import android.content.Intent
 import android.app.usage.UsageStatsManager
@@ -70,35 +68,18 @@ class AppUsageService : Service() {
                 if (shouldTrack) {
                     val safeApp = currentApp ?: "unknown.app"
 
-                    // Try get UID safely
-                    val uid = try {
-                        packageManager.getApplicationInfo(safeApp, 0).uid
-                    } catch (e: Exception) {
-                        Log.w("AppUsageService", "Failed to get UID for $safeApp: ${e.message}")
-                        -1
-                    }
-
-                    val mobileBytes = if (uid != -1)
-                        getDataUsage(uid, ConnectivityManager.TYPE_MOBILE) else -1L
-                    val wifiBytes = if (uid != -1)
-                        getDataUsage(uid, ConnectivityManager.TYPE_WIFI) else -1L
-
                     if (activeEntry == null) {
-                        // Start new session
                         activeEntry = AppUsageEntry(
                             packageName = safeApp,
                             appName = safeApp,
                             startTime = currentTime,
                             endTime = currentTime,
                             networkType = getNetworkType(),
-                            wifiBytes = wifiBytes,
-                            mobileBytes = mobileBytes
+
                         )
                     } else if (safeApp == activeEntry!!.packageName) {
-                        // Still same app
                         activeEntry!!.endTime = currentTime
                     } else {
-                        // App switched → save and start new
                         AppUsageStorage.saveEntry(this@AppUsageService, activeEntry!!)
                         Log.d("AppUsageService", "Saved entry: $activeEntry")
 
@@ -108,8 +89,7 @@ class AppUsageService : Service() {
                             startTime = currentTime,
                             endTime = currentTime,
                             networkType = getNetworkType(),
-                            wifiBytes = wifiBytes,
-                            mobileBytes = mobileBytes
+
                         )
                     }
                 }
@@ -140,38 +120,6 @@ class AppUsageService : Service() {
             else -> "Other"
         }
     }
-
-    private fun getDataUsage(uid: Int, networkType: Int): Long {
-        return try {
-            val statsManager = getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager
-            val now = System.currentTimeMillis()
-            val oneHourAgo = now - (1000 * 60 * 60) // לדוגמה: שעה אחרונה
-
-            val stats = statsManager.queryDetailsForUid(
-                networkType,
-                null,
-                oneHourAgo,
-                now,
-                uid
-            )
-
-            var totalBytes = 0L
-            val bucket = NetworkStats.Bucket()
-
-            while (stats.hasNextBucket()) {
-                stats.getNextBucket(bucket)
-                totalBytes += bucket.rxBytes + bucket.txBytes
-            }
-
-            stats.close()
-            totalBytes
-        } catch (e: Exception) {
-            e.printStackTrace()
-            -1
-        }
-    }
-
-
 
     override fun onDestroy() {
         activeEntry?.let {

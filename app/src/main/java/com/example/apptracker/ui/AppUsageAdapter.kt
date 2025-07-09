@@ -38,15 +38,11 @@ class AppUsageAdapter(private val context: Context) :
             val formatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             val duration = formatDuration(entry.endTime - entry.startTime)
 
-            // Bind UI: show app name with emoji
             binding.txtAppName.text = "📱 ${entry.appName}"
             binding.txtStart.text = "Start: ${formatter.format(Date(entry.startTime))}"
             binding.txtEnd.text = "End: ${formatter.format(Date(entry.endTime))}"
             binding.txtDuration.text = "Duration: $duration"
             binding.txtNetworkType.text = "📶 Network: ${entry.networkType}"
-            binding.txtWifiData.text = "Wi-Fi: ${formatData(entry.wifiBytes)}"
-            binding.txtMobileData.text = "Mobile: ${formatData(entry.mobileBytes)}"
-
 
         }
 
@@ -61,12 +57,5 @@ class AppUsageAdapter(private val context: Context) :
             else
                 String.format("%02d:%02d", minutes, seconds)
         }
-
-        private fun formatData(bytes: Long): String {
-            val kb = bytes / 1024
-            val mb = kb / 1024
-            return if (mb > 0) "$mb MB" else "$kb KB"
-        }
-
     }
 }

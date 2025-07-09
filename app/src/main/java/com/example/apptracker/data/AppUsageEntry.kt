@@ -5,8 +5,6 @@ data class AppUsageEntry(
     val appName: String,
     val startTime: Long,
     var endTime: Long,
-    val networkType: String = "Unknown",
-    var mobileBytes: Long = 0L,
-    var wifiBytes: Long = 0L
+    val networkType: String = "Unknown"
 )
 

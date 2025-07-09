@@ -11,5 +11,6 @@
     <string name="start_tracking">▶️ Start Tracking</string>
     <string name="stop_tracking">⏹ Stop Tracking</string>
     <string name="clean_all">🗑 Clean All</string>
+    <string name="list_of_app_usage_sessions">List of app usage sessions</string>
 
 </resources>

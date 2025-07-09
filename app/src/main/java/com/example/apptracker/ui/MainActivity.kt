@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val refreshRunnable = object : Runnable {
         override fun run() {
-            val updated = AppUsageStorage.loadEntries(this@MainActivity)
-            adapter.submitList(updated)
+            loadData()
             handler.postDelayed(this, 2000)
         }
     }
@@ -54,10 +53,11 @@ class MainActivity : AppCompatActivity() {
         binding.btnClearData.setOnClickListener {
             AppUsageStorage.clearEntries(this)
             adapter.submitList(emptyList())
+            binding.barChart.setData(emptyList())
             Toast.makeText(this, "🧹 Data Deleted", Toast.LENGTH_SHORT).show()
         }
 
-        adapter.submitList(AppUsageStorage.loadEntries(this))
+        loadData()
     }
 
     override fun onResume() {
@@ -74,9 +74,21 @@ class MainActivity : AppCompatActivity() {
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(
             AppOpsManager.OPSTR_GET_USAGE_STATS,
-            android.os.Process.myUid(),
+            Process.myUid(),
             packageName
         )
         return mode == AppOpsManager.MODE_ALLOWED
+    }
+
+    private fun loadData() {
+        val entries = AppUsageStorage.loadEntries(this)
+        adapter.submitList(entries)
+
+        val durations = entries.groupBy { it.appName }
+            .mapValues { list -> list.value.sumOf { it.endTime - it.startTime } }
+            .toList()
+            .sortedByDescending { it.second }
+
+        binding.barChart.setData(durations)
     }
 }
