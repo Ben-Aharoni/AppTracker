@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">AppTracker</string>
     <string name="app_icon">App Icon</string>
+    <string name="mobile_usage_0_mb">Mobile Usage: 0 MB</string>
+    <string name="wi_fi_usage_0_mb">Wi-Fi Usage: 0 MB</string>
+    <string name="network_unknown">Network: Unknown</string>
+    <string name="duration">Duration:</string>
+    <string name="end">End:</string>
+    <string name="start">Start:</string>
+    <string name="app_name_string">📱 App name</string>
+    <string name="start_tracking">▶️ Start Tracking</string>
+    <string name="stop_tracking">⏹ Stop Tracking</string>
+    <string name="clean_all">🗑 Clean All</string>
 
 </resources>

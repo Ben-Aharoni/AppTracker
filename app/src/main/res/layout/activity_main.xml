@@ -10,21 +10,21 @@
         android:id="@+id/btnStartService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="▶️ Start Tracking" />
+        android:text="@string/start_tracking" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStopService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="⏹ Stop Tracking" />
+        android:text="@string/stop_tracking" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="🗑 Clean All" />
+        android:text="@string/clean_all" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

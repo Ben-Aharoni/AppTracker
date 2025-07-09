@@ -14,36 +14,60 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="📱 App name" />
+            android:text="@string/app_name_string" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#666666"
-            android:text="Start: " />
+            android:text="@string/start" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#666666"
-            android:text="End: " />
+            android:text="@string/end" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtDuration"
             android:textColor="#FF5722"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Duration: " />
+            android:text="@string/duration" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtNetworkType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#303F9F"
+            android:text="@string/network_unknown" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtWifiData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wi_fi_usage_0_mb"
+            android:textColor="#2196F3" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtMobileData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mobile_usage_0_mb"
+            android:textColor="#009688" />
+
+
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
