@@ -9,7 +9,6 @@
   - [Requirements](#requirements)
   - [How To Install](#how-to-install)
   - [In App Usage](#in-app-usage)
-- [App Video](#app-video)
 
 ## App Overview
 **AppTracker** is a modern Android app for tracking foreground app usage, including session durations, network type, and real-time visualizations. Built with Kotlin, Material Design, and custom chart views.
