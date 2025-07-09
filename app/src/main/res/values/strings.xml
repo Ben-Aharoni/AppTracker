@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AppTracker</string>
+    <string name="app_icon">App Icon</string>
+
 </resources>

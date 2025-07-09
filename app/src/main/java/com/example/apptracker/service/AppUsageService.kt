@@ -67,7 +67,6 @@ class AppUsageService : Service() {
 
                 if (shouldTrack) {
                     if (activeEntry == null) {
-                        // Starting a new usage session
                         activeEntry = AppUsageEntry(
                             packageName = currentApp!!,
                             appName = currentApp,
@@ -75,10 +74,8 @@ class AppUsageService : Service() {
                             endTime = currentTime
                         )
                     } else if (currentApp == activeEntry!!.packageName) {
-                        // Still using the same app → update endTime
                         activeEntry!!.endTime = currentTime
                     } else {
-                        // Switched to a new app → save current session, start new
                         AppUsageStorage.saveEntry(this@AppUsageService, activeEntry!!)
                         Log.d("AppUsageService", "Saved: $activeEntry")
 
@@ -91,7 +88,7 @@ class AppUsageService : Service() {
                     }
                 }
 
-                delay(2000) // Sample every 2 seconds
+                delay(2000)
             }
         }
     }
@@ -106,7 +103,6 @@ class AppUsageService : Service() {
     }
 
     override fun onDestroy() {
-        // Save active usage if available
         activeEntry?.let {
             AppUsageStorage.saveEntry(this, it)
             Log.d("AppUsageService", "Saved onDestroy: $it")

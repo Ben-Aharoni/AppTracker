@@ -1,5 +1,6 @@
 package com.example.apptracker.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +9,8 @@ import com.example.apptracker.databinding.ItemAppUsageBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AppUsageAdapter : RecyclerView.Adapter<AppUsageAdapter.UsageViewHolder>() {
+class AppUsageAdapter(private val context: Context) :
+    RecyclerView.Adapter<AppUsageAdapter.UsageViewHolder>() {
 
     private val data = mutableListOf<AppUsageEntry>()
 
@@ -33,13 +35,26 @@ class AppUsageAdapter : RecyclerView.Adapter<AppUsageAdapter.UsageViewHolder>() 
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(entry: AppUsageEntry) {
-            val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-            val durationSec = (entry.endTime - entry.startTime) / 1000
+            val formatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+            val duration = formatDuration(entry.endTime - entry.startTime)
 
+            // Bind UI: show app name with emoji
             binding.txtAppName.text = "📱 ${entry.appName}"
-            binding.txtStart.text = "🟢 Start: ${format.format(Date(entry.startTime))}"
-            binding.txtEnd.text = "🔴 End: ${format.format(Date(entry.endTime))}"
-            binding.txtDuration.text = "⏱ Duration: $durationSec sec"
+            binding.txtStart.text = "Start: ${formatter.format(Date(entry.startTime))}"
+            binding.txtEnd.text = "End: ${formatter.format(Date(entry.endTime))}"
+            binding.txtDuration.text = "Duration: $duration"
+        }
+
+        private fun formatDuration(durationMillis: Long): String {
+            val totalSeconds = durationMillis / 1000
+            val hours = totalSeconds / 3600
+            val minutes = (totalSeconds % 3600) / 60
+            val seconds = totalSeconds % 60
+
+            return if (hours > 0)
+                String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            else
+                String.format("%02d:%02d", minutes, seconds)
         }
     }
 }

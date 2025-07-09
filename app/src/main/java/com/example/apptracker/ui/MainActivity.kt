@@ -16,7 +16,7 @@ import com.example.apptracker.util.AppUsageStorage
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val adapter = AppUsageAdapter()
+    private val adapter = AppUsageAdapter(this)
 
     private val handler = Handler(Looper.getMainLooper())
     private val refreshRunnable = object : Runnable {

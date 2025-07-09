@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_margin="8dp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layoutDirection="ltr"
-    android:elevation="4dp">
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="4dp"
+    android:layoutDirection="ltr">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,24 +14,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/txtAppName"
+        <TextView
+            android:id="@+id/txtAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="#000000"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="📱 App name" />
 
-        <TextView android:id="@+id/txtStart"
+        <TextView
+            android:id="@+id/txtStart"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:text="Start: " />
 
-        <TextView android:id="@+id/txtEnd"
+        <TextView
+            android:id="@+id/txtEnd"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:text="End: " />
 
-        <TextView android:id="@+id/txtDuration"
+        <TextView
+            android:id="@+id/txtDuration"
             android:textColor="#FF5722"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Duration: " />
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>
