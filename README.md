@@ -39,4 +39,5 @@
 - **clear data**: Deletes all saved usage history
 - **App Usage Graph**:  Displays list of all apps used with session details
 
-  Author: [Ben-Aharoni](https://github.com/Ben-Aharoni)
+### Author
+[Ben-Aharoni](https://github.com/Ben-Aharoni)
